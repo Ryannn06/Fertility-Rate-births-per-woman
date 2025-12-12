@@ -44,17 +44,21 @@ def clean_data(data: pd.DataFrame) -> pd.DataFrame:
         print(f"An error occurred during data cleaning: {e}")
     
 def load_data_to_db(data: pd.DataFrame) -> None:
-    username = 'postgres'
-    password =  'gelo120601'
-    db_name = 'fertility_rate_db'   
+    try:
+        username = 'postgres'
+        password =  'gelo120601'
+        db_name = 'fertility_rate_db'   
 
-    connection_string = f'postgresql://{username}:{password}@localhost/{db_name}'
-    db_engine = create_engine(connection_string)
+        connection_string = f'postgresql://{username}:{password}@localhost/{db_name}'
+        db_engine = create_engine(connection_string)
 
-    with db_engine.connect() as connection:
-        data.to_sql('fertility_rate', con=connection, if_exists='replace', index=False)
+        with db_engine.connect() as connection:
+            data.to_sql('fertility_rate', con=connection, if_exists='replace', index=False)
 
-        print("Data loaded into the database successfully.")
+            print("Data loaded into the database successfully.")
+    
+    except Exception as e:
+        print(f"An error occurred while loading data to the database: {e}")
         
 
 data_df = clean_data(load_data())
